@@ -6,6 +6,11 @@ async fn greet(name: web::Path<String>) -> impl Responder {
     format!("Hello {name}!")
 }
 
+#[get("/")]
+async fn health_check() -> impl Responder {
+    format!("ok!")
+}
+
 fn port() -> u16 {
     let port_key = "PORT";
     let default_port = 8080;
@@ -33,7 +38,7 @@ fn port() -> u16 {
 
 #[actix_web::main] // or #[tokio::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().service(greet))
+    HttpServer::new(|| App::new().service(health_check).service(greet))
         .bind(("0.0.0.0", port()))?
         .run()
         .await
