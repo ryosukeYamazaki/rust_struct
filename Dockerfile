@@ -7,7 +7,7 @@ ARG BUILD_HASH=unknown
 RUN cargo build --release
 
 FROM gcr.io/distroless/base-debian11
-COPY --from=build /src/target/release/ /bin
+COPY --from=build /src/target/release/rust_struct /bin
 ENV PORT 8080
 EXPOSE $PORT
 ENTRYPOINT ["/bin/rust_struct"]
