@@ -1,15 +1,17 @@
-FROM rust AS build
-ENV APP_ROOT /src
-WORKDIR $APP_ROOT
-COPY . $APP_ROOT
+FROM ekidd/rust-musl-builder:latest AS build
 ARG BUILD_VERSION=unknown
 ARG BUILD_HASH=unknown
-# RUN cargo build --release
+
+USER rust
+ADD --chown=rust:rust . ./
+RUN cargo build --release
+# for debug
 RUN cargo build
 
 FROM gcr.io/distroless/base-debian11
-# COPY --from=build /src/target/release/rust_struct /bin
-COPY --from=build /src/target/debug/rust_struct /bin
+COPY --from=build /home/rust/src/target/x86_64-unknown-linux-musl/release/rust_struct /bin/rust_struct
+# for debug
+# COPY --from=build /home/rust/src/target/x86_64-unknown-linux-musl/debug/rust_struct /bin/rust_struct
 ENV PORT 8080
 EXPOSE $PORT
 ENTRYPOINT ["/bin/rust_struct"]
