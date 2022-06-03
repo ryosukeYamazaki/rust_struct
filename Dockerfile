@@ -6,7 +6,7 @@ USER rust
 ADD --chown=rust:rust . ./
 RUN cargo build --release
 # for debug
-RUN cargo build
+# RUN cargo build
 
 FROM gcr.io/distroless/base-debian11
 COPY --from=build /home/rust/src/target/x86_64-unknown-linux-musl/release/rust_struct /bin/rust_struct
